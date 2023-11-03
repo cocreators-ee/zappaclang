@@ -126,7 +126,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			/*
 				=
 			*/
-			if p.pos != 2 || nodes[0].Type() != NodeAssign {
+			if p.pos != 2 || nodes[0].Type() != NodeVariable {
 				// Equals can only be used to assign to variables, so as the 2nd thing on the line
 				err = fmt.Errorf("equals can only follow a variable name at the very start of the line. Ex: $foo = 1")
 				return
@@ -135,7 +135,6 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			// Replace original variable reference with an assignment
 			target := nodes[0].(VariableNode)
 			nodes[0] = newAssign(p.pos, target.Name)
-
 		} else if itm.typ == itemVariable {
 			/*
 				$foo
@@ -288,10 +287,6 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			if p.items[1].typ != itemLParen || p.items[2].typ != itemText || p.items[3].typ != itemRParen {
 				err = invalidErr
 				return
-			}
-
-			for idx, i := range p.items {
-				fmt.Printf("%d: %#v\n", idx, i)
 			}
 
 			nodes = append(nodes, newDiskOperation(p.pos, itm.val, p.items[2].val))

@@ -2,6 +2,7 @@ package zappaclang
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -140,6 +141,8 @@ const (
 	Oct
 )
 
+//go:generate stringer -type=NumberSystem
+
 func parseNumberSystem(number string) NumberSystem {
 	if number[0] == 'b' || number[0] == 'B' {
 		return Bin
@@ -189,7 +192,7 @@ func (vn VariableNode) String() string {
 
 func newVariable(pos Pos, name string) VariableNode {
 	return VariableNode{
-		NodeType: NodeAssign,
+		NodeType: NodeVariable,
 		Pos:      pos,
 		Name:     name,
 	}
@@ -199,18 +202,18 @@ func newVariable(pos Pos, name string) VariableNode {
 type SetOutputNode struct {
 	NodeType
 	Pos
-	Output string
+	Output NumberSystem
 }
 
 func (vn SetOutputNode) String() string {
-	return vn.Output
+	return vn.Output.String()
 }
 
 func newSetOutput(pos Pos, output string) SetOutputNode {
 	return SetOutputNode{
 		NodeType: NodeSetOutput,
 		Pos:      pos,
-		Output:   output,
+		Output:   parseNumberSystem(output),
 	}
 }
 
@@ -224,6 +227,19 @@ type NumberNode struct {
 
 func (nn NumberNode) String() string {
 	return nn.Value
+}
+
+func (nn NumberNode) toFloat64() (float64, error) {
+	if nn.System == Dec {
+		f64, err := strconv.ParseFloat(nn.Value, 64)
+		return f64, err
+	} else if nn.System == Oct || nn.System == Hex {
+		i64, err := strconv.ParseInt(nn.Value, 0, 64)
+		return float64(i64), err
+	} else { // Bin
+		i64, err := strconv.ParseInt("0"+nn.Value, 0, 64)
+		return float64(i64), err
+	}
 }
 
 func newNumber(pos Pos, value string, system NumberSystem) NumberNode {

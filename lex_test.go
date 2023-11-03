@@ -117,7 +117,7 @@ func equal(i1, i2 []item, checkPos bool) bool {
 
 func TestLex(t *testing.T) {
 	for _, test := range lexTests {
-		fmt.Printf("Lexing: %#v\n", test.input)
+		// fmt.Printf("Lexing: %#v\n", test.input)
 
 		start := time.Now()
 		items := collect(&test)

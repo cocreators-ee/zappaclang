@@ -22,7 +22,7 @@ var parserTests = []parserTest{
 	{"save", "save(name)", []simpleNode{{typ: NodeSave, val: "save(name)"}}},
 	{"load", "load(foobar)", []simpleNode{{typ: NodeLoad, val: "load(foobar)"}}},
 	{"bin", "bin(16 ** 2)", []simpleNode{
-		{typ: NodeSetOutput, val: "bin"},
+		{typ: NodeSetOutput, val: "Bin"},
 		{typ: NodeLParen, val: "("},
 		{typ: NodeNumber, val: "16"},
 		{typ: NodeExp, val: "**"},
