@@ -128,7 +128,7 @@ func (zs *ZappacState) calculate(left Node, op OperatorNode, right Node) (Number
 	}
 
 	resultStr := strconv.FormatFloat(result, 'f', -1, 64)
-	fmt.Printf("%s %s %s = %s\n", left, op, right, resultStr)
+	// fmt.Printf("%s %s %s = %s\n", left, op, right, resultStr)
 
 	return newNumber(-1, resultStr, Dec), nil
 }
