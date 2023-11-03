@@ -36,6 +36,9 @@ func TestExec(t *testing.T) {
 
 		if result != expected {
 			t.Errorf("%s (%s): got\n\t%s\nexpected\n\t%s", "TestExec", elapsed, result, expected)
+			return
 		}
+
+		t.Log(input, fmt.Sprintf("OK in %s", elapsed))
 	}
 }
