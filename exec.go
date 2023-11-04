@@ -219,9 +219,15 @@ func (zs *ZappacState) pemdas(nodes []Node) (output string, err error) {
 			return
 		}
 
-		// If the node list is only 1 item, it must be a number
+		// If the node list is only 1 item, it must be a number or variable
 		if len(nodes) == 1 {
-			output = nodes[0].String()
+			if nodes[0].Type() == NodeVariable {
+				var val NumberNode
+				val, err = zs.readValue(nodes[0])
+				output = val.String()
+			} else {
+				output = nodes[0].String()
+			}
 			return
 		}
 
