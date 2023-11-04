@@ -58,7 +58,7 @@ func (zs *ZappacState) save(profile string) string {
 		return err.Error()
 	}
 
-	err = os.WriteFile(fp, contents, 0o500)
+	err = os.WriteFile(fp, contents, 0o400)
 	if err != nil {
 		return err.Error()
 	}
