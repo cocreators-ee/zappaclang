@@ -19,7 +19,7 @@ type parserTest struct {
 
 var parserTests = []parserTest{
 	{"empty", "", []simpleNode{}},
-	{"abc", "abc", []simpleNode{}},
+	{"clear", "clear()", []simpleNode{{typ: NodeClear, val: "clear()"}}},
 	{"save", "save(foobar)", []simpleNode{{typ: NodeSave, val: "save(foobar)"}}},
 	{"load", "load(foobar)", []simpleNode{{typ: NodeLoad, val: "load(foobar)"}}},
 	{"bin", "bin(16 ** 2)", []simpleNode{
@@ -96,9 +96,11 @@ func TestParse(t *testing.T) {
 		elapsed := time.Since(start)
 
 		// eofPos := Pos(0)
-		if nodes[len(nodes)-1].Type() == NodeEOF {
-			// eofPos = nodes[len(nodes)-1].Position()
-			nodes = nodes[:len(nodes)-1]
+		if len(nodes) > 0 {
+			if nodes[len(nodes)-1].Type() == NodeEOF {
+				// eofPos = nodes[len(nodes)-1].Position()
+				nodes = nodes[:len(nodes)-1]
+			}
 		}
 
 		expected := []string{}

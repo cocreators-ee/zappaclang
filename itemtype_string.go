@@ -37,11 +37,12 @@ func _() {
 	_ = x[itemHex-26]
 	_ = x[itemBin-27]
 	_ = x[itemOct-28]
+	_ = x[itemClear-29]
 }
 
-const _ItemType_name = "itemErroritemEOFitemEqualsitemSpaceitemLParenitemRParenitemNumberitemVariableitemAdditemSubitemMultitemExpitemDivitemFdivitemAnditemOritemXoritemInvitemModitemLShiftitemRShiftitemTextitemAbsitemSaveitemLoaditemDecitemHexitemBinitemOct"
+const _ItemType_name = "itemErroritemEOFitemEqualsitemSpaceitemLParenitemRParenitemNumberitemVariableitemAdditemSubitemMultitemExpitemDivitemFdivitemAnditemOritemXoritemInvitemModitemLShiftitemRShiftitemTextitemAbsitemSaveitemLoaditemDecitemHexitemBinitemOctitemClear"
 
-var _ItemType_index = [...]uint8{0, 9, 16, 26, 35, 45, 55, 65, 77, 84, 91, 99, 106, 113, 121, 128, 134, 141, 148, 155, 165, 175, 183, 190, 198, 206, 213, 220, 227, 234}
+var _ItemType_index = [...]uint8{0, 9, 16, 26, 35, 45, 55, 65, 77, 84, 91, 99, 106, 113, 121, 128, 134, 141, 148, 155, 165, 175, 183, 190, 198, 206, 213, 220, 227, 234, 243}
 
 func (i ItemType) String() string {
 	if i < 0 || i >= ItemType(len(_ItemType_index)-1) {

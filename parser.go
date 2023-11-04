@@ -257,6 +257,41 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 
 			// Number should look like a legitimate number from lexing, just need to figure out system
 			nodes = append(nodes, newNumber(itm.pos, itm.val, parseNumberSystem(itm.val)))
+		} else if itm.typ == itemClear {
+			invalidErr := fmt.Errorf("unexpected %s at pos %d, when used the input should be only: %s()", itm.val, itm.pos, itm.val)
+
+			if p.pos != 1 {
+				err = invalidErr
+				return
+			}
+
+			// Validation is very fixed, but depends on the rest of the input having been read, so read until EOF
+			for {
+				var _itm *item
+				_itm, err = p.nextItem(items)
+				if err != nil {
+					return
+				}
+				if _itm == nil {
+					break
+				}
+			}
+
+			if len(p.items) != 3 {
+				err = invalidErr
+				return
+			}
+
+			// clear()
+			if p.items[1].typ != itemLParen || p.items[2].typ != itemRParen {
+				err = invalidErr
+				return
+			}
+
+			// Since we just consumed all the items, we need to whip some magic or get an internal error
+			nodes = append(nodes, newClear(itm.pos))
+			nodes = append(nodes, newEOF(Pos(len(p.input))))
+			return
 		} else if isItemType(itm, []ItemType{itemSave, itemLoad}) {
 			/*
 				save(name)
@@ -304,10 +339,11 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 				dec(
 			*/
 			// Allowed following abs() dec() hex() bin() oct() = ( and operators
-			if p.pos != 1 {
+			if p.pos != 1 && len(nodes) > 0 {
 				left := nodes[len(nodes)-1]
 				validLeftTypes := append(operatorNodes, prefixNodes...)
 				validLeftTypes = append(validLeftTypes, NodeAbs)
+
 				if !isNodeType(left, validLeftTypes) {
 					err = fmt.Errorf("unexpected ( at pos %d, should be following abs, dec, hex, bin, oct, =, operators, or other (s", itm.pos)
 					return
@@ -358,6 +394,14 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			}
 
 			nodes = append(nodes, newAbs(itm.pos))
+		} else if itm.typ == itemText {
+			err = fmt.Errorf("unexpected %s at position %d", itm.val, itm.pos)
+			nodes = append(nodes, newEOF(Pos(len(p.input))))
+			return
+		} else {
+			err = fmt.Errorf("unexpected %s at position %d", itm.val, itm.pos)
+			nodes = append(nodes, newEOF(Pos(len(p.input))))
+			return
 		}
 	}
 }

@@ -105,12 +105,13 @@ const (
 	itemText // plain text
 	itemAbs  // abs() - calculate absolute value
 	// The following can only exist at the start of the line
-	itemSave // save state
-	itemLoad // load state
-	itemDec  // dec()
-	itemHex  // hex()
-	itemBin  // bin()
-	itemOct  // oct()
+	itemSave  // save state
+	itemLoad  // load state
+	itemDec   // dec()
+	itemHex   // hex()
+	itemBin   // bin()
+	itemOct   // oct()
+	itemClear // oct()
 )
 
 var operatorItems = []ItemType{
@@ -385,6 +386,9 @@ func lexText(l *lexer) stateFn {
 		l.emitItem(item)
 	} else if item.val == "load" {
 		item.typ = itemLoad
+		l.emitItem(item)
+	} else if item.val == "clear" {
+		item.typ = itemClear
 		l.emitItem(item)
 	} else if item.val == "abs" {
 		item.typ = itemAbs

@@ -31,11 +31,12 @@ func _() {
 	_ = x[NodeSetOutput-20]
 	_ = x[NodeSave-21]
 	_ = x[NodeLoad-22]
+	_ = x[NodeClear-23]
 }
 
-const _NodeType_name = "NodeEOFNodeAssignNodeLParenNodeRParenNodeNumberNodeVariableNodeAddNodeSubNodeMultNodeExpNodeDivNodeFdivNodeAndNodeOrNodeXorNodeInvNodeModNodeLShiftNodeRShiftNodeAbsNodeSetOutputNodeSaveNodeLoad"
+const _NodeType_name = "NodeEOFNodeAssignNodeLParenNodeRParenNodeNumberNodeVariableNodeAddNodeSubNodeMultNodeExpNodeDivNodeFdivNodeAndNodeOrNodeXorNodeInvNodeModNodeLShiftNodeRShiftNodeAbsNodeSetOutputNodeSaveNodeLoadNodeClear"
 
-var _NodeType_index = [...]uint8{0, 7, 17, 27, 37, 47, 59, 66, 73, 81, 88, 95, 103, 110, 116, 123, 130, 137, 147, 157, 164, 177, 185, 193}
+var _NodeType_index = [...]uint8{0, 7, 17, 27, 37, 47, 59, 66, 73, 81, 88, 95, 103, 110, 116, 123, 130, 137, 147, 157, 164, 177, 185, 193, 202}
 
 func (i NodeType) String() string {
 	if i < 0 || i >= NodeType(len(_NodeType_index)-1) {

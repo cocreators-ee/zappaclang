@@ -45,6 +45,10 @@ func (zs *ZappacState) load(profile string) string {
 	return fmt.Sprintf("Loaded %s", profile)
 }
 
+func (zs *ZappacState) clear() {
+	zs.Variables = map[string]NumberNode{}
+}
+
 func (zs *ZappacState) save(profile string) string {
 	fp := getProfileFile(profile)
 
@@ -288,6 +292,9 @@ func (zs *ZappacState) Exec(nodes []Node, updateVariables bool) (string, error) 
 			targetVariable = assign.Target
 		}
 		nodes = nodes[1:]
+	} else if firstType == NodeClear {
+		zs.clear()
+		return "Cleared state", nil
 	} else if firstType == NodeSave {
 		operation, _ := nodes[0].(DiskOperationNode)
 		msg := zs.save(operation.Profile)

@@ -74,6 +74,8 @@ const (
 	NodeSave
 	// NodeLoad is for load(foo)
 	NodeLoad
+	// NodeClear is for clear()
+	NodeClear
 )
 
 //go:generate stringer -type=NodeType
@@ -357,6 +359,23 @@ func (e EOFNode) String() string {
 func newEOF(pos Pos) EOFNode {
 	return EOFNode{
 		NodeType: NodeEOF,
+		Pos:      pos,
+	}
+}
+
+// ClearNode clear()
+type ClearNode struct {
+	NodeType
+	Pos
+}
+
+func (c ClearNode) String() string {
+	return "clear()"
+}
+
+func newClear(pos Pos) ClearNode {
+	return ClearNode{
+		NodeType: NodeClear,
 		Pos:      pos,
 	}
 }
