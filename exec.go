@@ -325,5 +325,4 @@ func init() {
 	}
 
 	StoragePath = base
-	println(StoragePath)
 }
