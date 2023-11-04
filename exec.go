@@ -299,8 +299,11 @@ func (zs *ZappacState) Exec(nodes []Node, updateVariables bool) (string, error) 
 		}
 		nodes = nodes[1:]
 	} else if firstType == NodeClear {
-		zs.clear()
-		return "Cleared state", nil
+		if updateVariables {
+			zs.clear()
+			return "Cleared state", nil
+		}
+		return "", nil
 	} else if firstType == NodeSave {
 		operation, _ := nodes[0].(DiskOperationNode)
 		msg := zs.save(operation.Profile)
