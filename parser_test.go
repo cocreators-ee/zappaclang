@@ -19,7 +19,8 @@ type parserTest struct {
 
 var parserTests = []parserTest{
 	{"empty", "", []simpleNode{}},
-	{"save", "save(name)", []simpleNode{{typ: NodeSave, val: "save(name)"}}},
+	{"abc", "abc", []simpleNode{}},
+	{"save", "save(foobar)", []simpleNode{{typ: NodeSave, val: "save(foobar)"}}},
 	{"load", "load(foobar)", []simpleNode{{typ: NodeLoad, val: "load(foobar)"}}},
 	{"bin", "bin(16 ** 2)", []simpleNode{
 		{typ: NodeSetOutput, val: "Bin"},

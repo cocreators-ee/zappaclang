@@ -3,8 +3,16 @@ package zappaclang
 import (
 	"fmt"
 	"math"
+	"os"
+	"path"
+	"runtime"
 	"strconv"
+
+	"gopkg.in/yaml.v3"
 )
+
+// StoragePath gets updated to the base path of Zappac state
+var StoragePath = "."
 
 var emptyNumber = newNumber(-1, "", Dec)
 
@@ -13,14 +21,45 @@ type OnSaveCallback func()
 
 // ZappacState contains the state for Zappac
 type ZappacState struct {
-	Variables map[string]NumberNode
-	OnSave    OnSaveCallback
+	Variables map[string]NumberNode `yaml:"variables"`
+	OnSave    OnSaveCallback        `yaml:"-"`
+}
+
+func getProfileFile(profile string) string {
+	return fmt.Sprintf("%s/%s.json", StoragePath, profile)
 }
 
 func (zs *ZappacState) load(profile string) {
+	fp := getProfileFile(profile)
+
+	contents, err := os.ReadFile(fp)
+	if err != nil {
+		println(err)
+		return
+	}
+
+	err = yaml.Unmarshal(contents, &zs)
+	if err != nil {
+		println(err)
+		return
+	}
 }
 
 func (zs *ZappacState) save(profile string) {
+	fp := getProfileFile(profile)
+
+	contents, err := yaml.Marshal(&zs)
+	if err != nil {
+		println(err)
+		return
+	}
+
+	err = os.WriteFile(fp, contents, 0o500)
+	if err != nil {
+		println(err)
+		return
+	}
+
 	zs.OnSave()
 }
 
@@ -279,4 +318,16 @@ func NewZappacState(name string) *ZappacState {
 	zs.load(name)
 
 	return zs
+}
+
+func init() {
+	base := "."
+	if runtime.GOOS == "windows" {
+		base = path.Join(os.Getenv("APPDATA"), "zappac")
+	} else {
+		base = path.Join(os.Getenv("HOME"), ".config", "zappac")
+	}
+
+	StoragePath = base
+	println(StoragePath)
 }

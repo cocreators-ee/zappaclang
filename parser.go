@@ -102,6 +102,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 		// Read new item
 		var itm *item
 		itm, err = p.nextItem(items)
+
 		if err != nil {
 			return
 		}
@@ -113,11 +114,13 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 
 			// Parsing completed, check that last item makes sense
 			if p.pos >= 1 {
-				left := nodes[len(nodes)-1]
-				validLeftTypes := append(valueNodes, NodeRParen)
+				if len(nodes) > 0 {
+					left := nodes[len(nodes)-1]
+					validLeftTypes := append(valueNodes, NodeRParen)
 
-				if !isNodeType(left, validLeftTypes) {
-					err = ErrorUnexpectedEOF
+					if !isNodeType(left, validLeftTypes) {
+						err = ErrorUnexpectedEOF
+					}
 				}
 			}
 

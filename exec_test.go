@@ -2,6 +2,7 @@ package zappaclang
 
 import (
 	"fmt"
+	"os"
 	"testing"
 	"time"
 )
@@ -16,9 +17,23 @@ var execTests = []execTestCase{
 	{"$foo + 1", "63"},
 	{"$bar = 0xbada55", "0xbada55"},
 	{"$bar - $foo", "12245527"},
+	{"save(foobar)", "Saved foobar"},
+	{"load(foobar)", "Loaded foobar"},
 }
 
 func TestExec(t *testing.T) {
+	dir, err := os.MkdirTemp("", "zappac-test")
+	if err != nil {
+		t.Errorf("%+v", err)
+		return
+	}
+
+	defer func() {
+		_ = os.RemoveAll(dir)
+	}()
+
+	StoragePath = dir
+
 	zs := NewZappacState("")
 	for _, execTest := range execTests {
 		fmt.Printf("Parsing %s\n", execTest)
