@@ -306,12 +306,18 @@ func (zs *ZappacState) Exec(nodes []Node, updateVariables bool) (string, error) 
 		return "", nil
 	} else if firstType == NodeSave {
 		operation, _ := nodes[0].(DiskOperationNode)
-		msg := zs.save(operation.Profile)
-		return msg, nil
+		if updateVariables {
+			msg := zs.save(operation.Profile)
+			return msg, nil
+		}
+		return "", nil
 	} else if firstType == NodeLoad {
 		operation, _ := nodes[0].(DiskOperationNode)
-		msg := zs.load(operation.Profile)
-		return msg, nil
+		if updateVariables {
+			msg := zs.load(operation.Profile)
+			return msg, nil
+		}
+		return "", nil
 	}
 
 	result, err := zs.pemdas(nodes)
