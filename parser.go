@@ -75,7 +75,8 @@ func (p *parser) peek(items chan item) (*item, error) {
 	return item, err
 }
 
-func isNodeType(node Node, types []NodeType) bool {
+// IsNodeType checks if the node of one of the given types
+func IsNodeType(node Node, types []NodeType) bool {
 	t := node.Type()
 	for _, _type := range types {
 		if t == _type {
@@ -116,9 +117,9 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			if p.pos >= 1 {
 				if len(nodes) > 0 {
 					left := nodes[len(nodes)-1]
-					validLeftTypes := append(valueNodes, NodeRParen)
+					validLeftTypes := append(ValueNodes, NodeRParen)
 
-					if !isNodeType(left, validLeftTypes) {
+					if !IsNodeType(left, validLeftTypes) {
 						err = ErrorUnexpectedEOF
 					}
 				}
@@ -146,12 +147,12 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			if p.pos != 1 {
 				left := nodes[len(nodes)-1]
 
-				validLeftTypes := append(operatorNodes, NodeLParen, NodeAssign)
+				validLeftTypes := append(OperatorNodes, NodeLParen, NodeAssign)
 				if len(nodes) == 1 {
 					validLeftTypes = append(validLeftTypes, prefixNodes...)
 				}
 
-				if !isNodeType(left, validLeftTypes) {
+				if !IsNodeType(left, validLeftTypes) {
 					err = fmt.Errorf("unexpected %s at pos %d following %s", itm.val, itm.pos, left.String())
 					return
 				}
@@ -181,7 +182,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			if itm.typ == itemSub {
 				left := nodes[len(nodes)-1]
 				// Check for 2 - 1 or $foo - 1
-				if !isNodeType(left, valueNodes) {
+				if !IsNodeType(left, ValueNodes) {
 					peek, err = p.peek(items)
 					if err != nil {
 						return
@@ -200,8 +201,8 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 								$foo = -1 // Prefixes
 								dec(-7)
 							*/
-							validLeftTypes := append(operatorNodes, prefixNodes...)
-							if isNodeType(left, validLeftTypes) {
+							validLeftTypes := append(OperatorNodes, prefixNodes...)
+							if IsNodeType(left, validLeftTypes) {
 								isNegativeNumber = true
 							}
 						}
@@ -214,9 +215,9 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 				value := fmt.Sprintf("-%s", peek.val)
 				if p.pos != 1 {
 					left := nodes[len(nodes)-1]
-					validLeftTypes := append(operatorNodes, prefixNodes...)
+					validLeftTypes := append(OperatorNodes, prefixNodes...)
 
-					if !isNodeType(left, validLeftTypes) {
+					if !IsNodeType(left, validLeftTypes) {
 						err = fmt.Errorf("unexpected %s at pos %d, looks like a negative number that doesn't make sense here", value, itm.pos)
 						return
 					}
@@ -226,9 +227,9 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			} else {
 				// Is an operator valid here - typically needs a value on the left (and right, but that will be checked later), or rparen
 				left := nodes[len(nodes)-1]
-				validLeftTypes := append(valueNodes, NodeRParen)
+				validLeftTypes := append(ValueNodes, NodeRParen)
 
-				if !isNodeType(left, validLeftTypes) {
+				if !IsNodeType(left, validLeftTypes) {
 					err = fmt.Errorf("unexpected %s at pos %d, operators should follow numbers, variables, or closing parenthesis", itm.val, itm.pos)
 					return
 				}
@@ -247,9 +248,9 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 
 			if p.pos != 1 {
 				left := nodes[len(nodes)-1]
-				validLeftTypes := append(operatorNodes, prefixNodes...)
+				validLeftTypes := append(OperatorNodes, prefixNodes...)
 
-				if !isNodeType(left, validLeftTypes) {
+				if !IsNodeType(left, validLeftTypes) {
 					err = fmt.Errorf("unexpected %s at pos %d, looks like a negative number that doesn't make sense here", itm.val, itm.pos)
 					return
 				}
@@ -341,10 +342,10 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			// Allowed following abs() dec() hex() bin() oct() = ( and operators
 			if p.pos != 1 && len(nodes) > 0 {
 				left := nodes[len(nodes)-1]
-				validLeftTypes := append(operatorNodes, prefixNodes...)
+				validLeftTypes := append(OperatorNodes, prefixNodes...)
 				validLeftTypes = append(validLeftTypes, NodeAbs)
 
-				if !isNodeType(left, validLeftTypes) {
+				if !IsNodeType(left, validLeftTypes) {
 					err = fmt.Errorf("unexpected ( at pos %d, should be following abs, dec, hex, bin, oct, =, operators, or other (s", itm.pos)
 					return
 				}
@@ -368,9 +369,9 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			}
 
 			left := nodes[len(nodes)-1]
-			validLeftTypes := append(valueNodes, NodeRParen)
+			validLeftTypes := append(ValueNodes, NodeRParen)
 
-			if !isNodeType(left, validLeftTypes) {
+			if !IsNodeType(left, validLeftTypes) {
 				err = fmt.Errorf("unexpected ) at pos %d, should be following numbers, variables, or other )s", itm.pos)
 				return
 			}
@@ -385,9 +386,9 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			*/
 			if p.pos != 1 {
 				left := nodes[len(nodes)-1]
-				validLeftTypes := append(operatorNodes, prefixNodes...)
+				validLeftTypes := append(OperatorNodes, prefixNodes...)
 
-				if !isNodeType(left, validLeftTypes) {
+				if !IsNodeType(left, validLeftTypes) {
 					err = fmt.Errorf("unexpected abs() at pos %d, may follow operators, (, or =", itm.pos)
 					return
 				}

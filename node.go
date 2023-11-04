@@ -80,8 +80,8 @@ const (
 
 //go:generate stringer -type=NodeType
 
-// Nodes that are operators between values
-var operatorNodes = []NodeType{
+// OperatorNodes are operators between values
+var OperatorNodes = []NodeType{
 	NodeAdd,
 	NodeSub,
 	NodeMult,
@@ -118,6 +118,15 @@ var diskOperationMap = map[string]NodeType{
 	"load": NodeLoad,
 }
 
+// FunctionNodes are any functions
+var FunctionNodes = []NodeType{
+	NodeAbs,
+	NodeSetOutput,
+	NodeSave,
+	NodeLoad,
+	NodeClear,
+}
+
 // Nodes that can be prefixes to most values
 var prefixNodes = []NodeType{
 	NodeLParen,
@@ -125,8 +134,8 @@ var prefixNodes = []NodeType{
 	NodeAssign,
 }
 
-// Nodes that can be evaluated as values
-var valueNodes = []NodeType{
+// ValueNodes are values that can be evaluated as values
+var ValueNodes = []NodeType{
 	NodeNumber,
 	NodeVariable,
 }
