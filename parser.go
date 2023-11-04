@@ -121,6 +121,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 				}
 			}
 
+			nodes = append(nodes, newEOF(p.pos))
 			return
 		} else if itm.typ == itemEquals {
 			/*

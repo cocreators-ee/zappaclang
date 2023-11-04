@@ -8,9 +8,20 @@ import (
 
 var emptyNumber = newNumber(-1, "", Dec)
 
+// OnSaveCallback is the type of the OnSave callback
+type OnSaveCallback func()
+
 // ZappacState contains the state for Zappac
 type ZappacState struct {
 	Variables map[string]NumberNode
+	OnSave    OnSaveCallback
+}
+
+func (zs *ZappacState) load(profile string) {
+}
+
+func (zs *ZappacState) save(profile string) {
+	zs.OnSave()
 }
 
 func findNext(nodes []Node, types []NodeType) int {
@@ -200,8 +211,13 @@ func (zs *ZappacState) pemdas(nodes []Node) (output string, err error) {
 			continue
 		}
 
-		fmt.Printf("Unexpected end of pemdas: %+v\n", nodes)
+		// Cut out EOF cleanly
+		if nodes[1].Type() == NodeEOF {
+			nodes = []Node{nodes[0]}
+			continue
+		}
 
+		fmt.Printf("Unexpected end of pemdas: %+v\n", nodes)
 		return "ERROR", err
 	}
 }
@@ -226,6 +242,14 @@ func (zs *ZappacState) Exec(nodes []Node) (string, error) {
 		assign, _ := nodes[0].(AssignNode)
 		targetVariable = assign.Target
 		nodes = nodes[1:]
+	} else if firstType == NodeSave {
+		operation, _ := nodes[0].(DiskOperationNode)
+		zs.save(operation.Profile)
+		return fmt.Sprintf("Saved %s", operation.Profile), nil
+	} else if firstType == NodeLoad {
+		operation, _ := nodes[0].(DiskOperationNode)
+		zs.load(operation.Profile)
+		return fmt.Sprintf("Loaded %s", operation.Profile), nil
 	}
 
 	result, err := zs.pemdas(nodes)
@@ -245,8 +269,12 @@ func (zs *ZappacState) Exec(nodes []Node) (string, error) {
 
 // NewZappacState initializes a new ZappacState instance and loads existing state
 func NewZappacState(name string) *ZappacState {
-	// TODO: Load
-	return &ZappacState{
+	zs := &ZappacState{
 		Variables: map[string]NumberNode{},
+		OnSave:    func() {},
 	}
+
+	zs.load(name)
+
+	return zs
 }

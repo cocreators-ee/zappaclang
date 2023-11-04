@@ -28,8 +28,10 @@ func (p Pos) Position() Pos {
 }
 
 const (
+	// NodeEOF is the end of input
+	NodeEOF NodeType = iota
 	// NodeAssign is for $foo =
-	NodeAssign NodeType = iota
+	NodeAssign
 	// NodeLParen is for (
 	NodeLParen
 	// NodeRParen is for )
@@ -338,6 +340,23 @@ func (an AbsNode) String() string {
 func newAbs(pos Pos) AbsNode {
 	return AbsNode{
 		NodeType: NodeAbs,
+		Pos:      pos,
+	}
+}
+
+// EOFNode EOF
+type EOFNode struct {
+	NodeType
+	Pos
+}
+
+func (e EOFNode) String() string {
+	return ""
+}
+
+func newEOF(pos Pos) EOFNode {
+	return EOFNode{
+		NodeType: NodeEOF,
 		Pos:      pos,
 	}
 }

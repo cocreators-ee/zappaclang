@@ -8,33 +8,34 @@ func _() {
 	// An "invalid array index" compiler error signifies that the constant values have changed.
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
-	_ = x[NodeAssign-0]
-	_ = x[NodeLParen-1]
-	_ = x[NodeRParen-2]
-	_ = x[NodeNumber-3]
-	_ = x[NodeVariable-4]
-	_ = x[NodeAdd-5]
-	_ = x[NodeSub-6]
-	_ = x[NodeMult-7]
-	_ = x[NodeExp-8]
-	_ = x[NodeDiv-9]
-	_ = x[NodeFdiv-10]
-	_ = x[NodeAnd-11]
-	_ = x[NodeOr-12]
-	_ = x[NodeXor-13]
-	_ = x[NodeInv-14]
-	_ = x[NodeMod-15]
-	_ = x[NodeLShift-16]
-	_ = x[NodeRShift-17]
-	_ = x[NodeAbs-18]
-	_ = x[NodeSetOutput-19]
-	_ = x[NodeSave-20]
-	_ = x[NodeLoad-21]
+	_ = x[NodeEOF-0]
+	_ = x[NodeAssign-1]
+	_ = x[NodeLParen-2]
+	_ = x[NodeRParen-3]
+	_ = x[NodeNumber-4]
+	_ = x[NodeVariable-5]
+	_ = x[NodeAdd-6]
+	_ = x[NodeSub-7]
+	_ = x[NodeMult-8]
+	_ = x[NodeExp-9]
+	_ = x[NodeDiv-10]
+	_ = x[NodeFdiv-11]
+	_ = x[NodeAnd-12]
+	_ = x[NodeOr-13]
+	_ = x[NodeXor-14]
+	_ = x[NodeInv-15]
+	_ = x[NodeMod-16]
+	_ = x[NodeLShift-17]
+	_ = x[NodeRShift-18]
+	_ = x[NodeAbs-19]
+	_ = x[NodeSetOutput-20]
+	_ = x[NodeSave-21]
+	_ = x[NodeLoad-22]
 }
 
-const _NodeType_name = "NodeAssignNodeLParenNodeRParenNodeNumberNodeVariableNodeAddNodeSubNodeMultNodeExpNodeDivNodeFdivNodeAndNodeOrNodeXorNodeInvNodeModNodeLShiftNodeRShiftNodeAbsNodeSetOutputNodeSaveNodeLoad"
+const _NodeType_name = "NodeEOFNodeAssignNodeLParenNodeRParenNodeNumberNodeVariableNodeAddNodeSubNodeMultNodeExpNodeDivNodeFdivNodeAndNodeOrNodeXorNodeInvNodeModNodeLShiftNodeRShiftNodeAbsNodeSetOutputNodeSaveNodeLoad"
 
-var _NodeType_index = [...]uint8{0, 10, 20, 30, 40, 52, 59, 66, 74, 81, 88, 96, 103, 109, 116, 123, 130, 140, 150, 157, 170, 178, 186}
+var _NodeType_index = [...]uint8{0, 7, 17, 27, 37, 47, 59, 66, 73, 81, 88, 95, 103, 110, 116, 123, 130, 137, 147, 157, 164, 177, 185, 193}
 
 func (i NodeType) String() string {
 	if i < 0 || i >= NodeType(len(_NodeType_index)-1) {

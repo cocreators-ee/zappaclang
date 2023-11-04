@@ -50,25 +50,25 @@ $foo = variable
 >> = rshift
 abs = absolute
 = = equals
-+= plus equals
--= minus equals
-*= mult equals
-/= div equals
-//= fdiv equals
-**= exp equals
-&= and equals
-|= or equals
-^= xor equals
-~= invert equals
-%= mod equals
-<<= lshift equals
->>= rshift equals
++= TODO: plus equals
+-= TODO: minus equals
+*= TODO: mult equals
+/= TODO: div equals
+//= TODO: fdiv equals
+**= TODO: exp equals
+&= TODO: and equals
+|= TODO: or equals
+^= TODO: xor equals
+~= TODO: invert equals
+%= TODO: mod equals
+<<= TODO: lshift equals
+>>= TODO: rshift equals
 save = save
 load = load
-dec = decimal
-hex = hexadecimal
-bin = binary
-oct = octal
+dec = decimal output
+hex = hexadecimal output
+bin = binary output
+oct = octal output
 */
 
 // Pos represents a byte position in the original input text from which

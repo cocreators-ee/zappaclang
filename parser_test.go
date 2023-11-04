@@ -94,6 +94,10 @@ func TestParse(t *testing.T) {
 		nodes, err := Parse(test.input)
 		elapsed := time.Since(start)
 
+		if nodes[len(nodes)-1].Type() == NodeEOF {
+			nodes = nodes[:len(nodes)-1]
+		}
+
 		expected := []string{}
 		for _, si := range test.nodes {
 			expected = append(expected, si.val)
