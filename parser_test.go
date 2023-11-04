@@ -94,7 +94,9 @@ func TestParse(t *testing.T) {
 		nodes, err := Parse(test.input)
 		elapsed := time.Since(start)
 
+		// eofPos := Pos(0)
 		if nodes[len(nodes)-1].Type() == NodeEOF {
+			// eofPos = nodes[len(nodes)-1].Position()
 			nodes = nodes[:len(nodes)-1]
 		}
 
@@ -112,6 +114,8 @@ func TestParse(t *testing.T) {
 			t.Errorf("%s (%s): got\n\t%+v\nexpected\n\t%v", test.name, elapsed, nodes, expected)
 			return
 		}
+
+		// fmt.Printf("len() %d EOF @ %d\n", len(test.input), eofPos)
 
 		t.Log(test.name, fmt.Sprintf("OK in %s", elapsed))
 	}

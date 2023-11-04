@@ -121,7 +121,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 				}
 			}
 
-			nodes = append(nodes, newEOF(p.pos))
+			nodes = append(nodes, newEOF(Pos(len(p.input))))
 			return
 		} else if itm.typ == itemEquals {
 			/*
@@ -135,7 +135,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 
 			// Replace original variable reference with an assignment
 			target := nodes[0].(VariableNode)
-			nodes[0] = newAssign(p.pos, target.Name)
+			nodes[0] = newAssign(itm.pos, target.Name)
 		} else if itm.typ == itemVariable {
 			/*
 				$foo
@@ -154,7 +154,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 				}
 			}
 
-			nodes = append(nodes, newVariable(p.pos, itm.val))
+			nodes = append(nodes, newVariable(itm.pos, itm.val))
 
 		} else if isItemType(itm, []ItemType{itemDec, itemBin, itemOct, itemHex}) {
 			/*
@@ -165,7 +165,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 				return
 			}
 
-			nodes = append(nodes, newSetOutput(p.pos, itm.val))
+			nodes = append(nodes, newSetOutput(itm.pos, itm.val))
 
 		} else if isItemType(itm, operatorItems) {
 			/*
@@ -218,7 +218,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 						return
 					}
 				}
-				nodes = append(nodes, newNumber(p.pos, value, parseNumberSystem(peek.val)))
+				nodes = append(nodes, newNumber(itm.pos, value, parseNumberSystem(peek.val)))
 				p.pos++ // Skip peeked item, it's been parsed
 			} else {
 				// Is an operator valid here - typically needs a value on the left (and right, but that will be checked later), or rparen
@@ -230,7 +230,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 					return
 				}
 
-				nodes = append(nodes, newOperator(p.pos, itm.val))
+				nodes = append(nodes, newOperator(itm.pos, itm.val))
 			}
 		} else if itm.typ == itemNumber {
 			/*
@@ -253,7 +253,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			}
 
 			// Number should look like a legitimate number from lexing, just need to figure out system
-			nodes = append(nodes, newNumber(p.pos, itm.val, parseNumberSystem(itm.val)))
+			nodes = append(nodes, newNumber(itm.pos, itm.val, parseNumberSystem(itm.val)))
 		} else if isItemType(itm, []ItemType{itemSave, itemLoad}) {
 			/*
 				save(name)
@@ -290,9 +290,9 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 				return
 			}
 
-			nodes = append(nodes, newDiskOperation(p.pos, itm.val, p.items[2].val))
-
-			// Since we just consumed all the items, we need to bail out here or get an internal error
+			// Since we just consumed all the items, we need to whip some magic or get an internal error
+			nodes = append(nodes, newDiskOperation(itm.pos, itm.val, p.items[2].val))
+			nodes = append(nodes, newEOF(Pos(len(p.input))))
 			return
 		} else if itm.typ == itemLParen {
 			/*
@@ -314,7 +314,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			// Increase parenthesis level
 			p.parenthesis++
 
-			nodes = append(nodes, newLParen(p.pos))
+			nodes = append(nodes, newLParen(itm.pos))
 		} else if itm.typ == itemRParen {
 			/*
 				abs(-2)
@@ -339,7 +339,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			// Decrease parenthesis level
 			p.parenthesis--
 
-			nodes = append(nodes, newRParen(p.pos))
+			nodes = append(nodes, newRParen(itm.pos))
 		} else if itm.typ == itemAbs {
 			/*
 				abs()
@@ -354,7 +354,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 				}
 			}
 
-			nodes = append(nodes, newAbs(p.pos))
+			nodes = append(nodes, newAbs(itm.pos))
 		}
 	}
 }
