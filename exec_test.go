@@ -33,7 +33,7 @@ func TestExec(t *testing.T) {
 		}
 
 		fmt.Printf("Execing %+v\n", nodes)
-		result, err := zs.Exec(nodes)
+		result, err := zs.Exec(nodes, true)
 		if err != nil {
 			t.Errorf("%s (%s): got\n\t%v\nexpected\n\t%v", execTest, elapsed, err, execTest.Expected)
 			return

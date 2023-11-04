@@ -223,7 +223,7 @@ func (zs *ZappacState) pemdas(nodes []Node) (output string, err error) {
 }
 
 // Exec executes logic from parsed nodes
-func (zs *ZappacState) Exec(nodes []Node) (string, error) {
+func (zs *ZappacState) Exec(nodes []Node, updateVariables bool) (string, error) {
 	// Is there anything to do?
 	if len(nodes) == 0 {
 		// TODO: Execute previous calculation again
@@ -240,7 +240,9 @@ func (zs *ZappacState) Exec(nodes []Node) (string, error) {
 		nodes = nodes[1:]
 	} else if firstType == NodeAssign {
 		assign, _ := nodes[0].(AssignNode)
-		targetVariable = assign.Target
+		if updateVariables {
+			targetVariable = assign.Target
+		}
 		nodes = nodes[1:]
 	} else if firstType == NodeSave {
 		operation, _ := nodes[0].(DiskOperationNode)
