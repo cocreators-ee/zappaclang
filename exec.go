@@ -29,34 +29,38 @@ func getProfileFile(profile string) string {
 	return fmt.Sprintf("%s/%s.json", StoragePath, profile)
 }
 
-func (zs *ZappacState) load(profile string) {
+func (zs *ZappacState) load(profile string) string {
 	fp := getProfileFile(profile)
 
 	contents, err := os.ReadFile(fp)
 	if err != nil {
-		return
+		return err.Error()
 	}
 
 	err = yaml.Unmarshal(contents, &zs)
 	if err != nil {
-		return
+		return err.Error()
 	}
+
+	return fmt.Sprintf("Loaded %s", profile)
 }
 
-func (zs *ZappacState) save(profile string) {
+func (zs *ZappacState) save(profile string) string {
 	fp := getProfileFile(profile)
 
 	contents, err := yaml.Marshal(&zs)
 	if err != nil {
-		return
+		return err.Error()
 	}
 
 	err = os.WriteFile(fp, contents, 0o500)
 	if err != nil {
-		return
+		return err.Error()
 	}
 
 	zs.OnSave()
+
+	return fmt.Sprintf("Saved %s", profile)
 }
 
 func findNext(nodes []Node, types []NodeType) int {
@@ -281,12 +285,12 @@ func (zs *ZappacState) Exec(nodes []Node, updateVariables bool) (string, error) 
 		nodes = nodes[1:]
 	} else if firstType == NodeSave {
 		operation, _ := nodes[0].(DiskOperationNode)
-		zs.save(operation.Profile)
-		return fmt.Sprintf("Saved %s", operation.Profile), nil
+		msg := zs.save(operation.Profile)
+		return msg, nil
 	} else if firstType == NodeLoad {
 		operation, _ := nodes[0].(DiskOperationNode)
-		zs.load(operation.Profile)
-		return fmt.Sprintf("Loaded %s", operation.Profile), nil
+		msg := zs.load(operation.Profile)
+		return msg, nil
 	}
 
 	result, err := zs.pemdas(nodes)
