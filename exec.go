@@ -34,13 +34,11 @@ func (zs *ZappacState) load(profile string) {
 
 	contents, err := os.ReadFile(fp)
 	if err != nil {
-		println(err)
 		return
 	}
 
 	err = yaml.Unmarshal(contents, &zs)
 	if err != nil {
-		println(err)
 		return
 	}
 }
@@ -50,13 +48,11 @@ func (zs *ZappacState) save(profile string) {
 
 	contents, err := yaml.Marshal(&zs)
 	if err != nil {
-		println(err)
 		return
 	}
 
 	err = os.WriteFile(fp, contents, 0o500)
 	if err != nil {
-		println(err)
 		return
 	}
 
