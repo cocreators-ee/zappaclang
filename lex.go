@@ -418,10 +418,19 @@ func lexNumber(l *lexer) stateFn {
 	if l.accept("b") {
 		l.acceptRun(binary)
 		l.emit(itemNumber)
-	} else if l.accept("0") && l.accept("xX") {
-		l.acceptRun(hexadecimal)
-		l.emit(itemNumber)
-	} else if l.accept(digits) {
+		return lexBase
+	}
+
+	if l.accept("0") {
+		if l.accept("xX") {
+			l.acceptRun(hexadecimal)
+			l.emit(itemNumber)
+			return lexBase
+		}
+		l.backup()
+	}
+
+	if l.accept(digits) {
 		decimal := false
 
 		for {
