@@ -53,6 +53,11 @@ func (zs *ZappacState) save(profile string) string {
 		return err.Error()
 	}
 
+	err = os.MkdirAll(StoragePath, 0o700)
+	if err != nil {
+		return err.Error()
+	}
+
 	err = os.WriteFile(fp, contents, 0o500)
 	if err != nil {
 		return err.Error()
