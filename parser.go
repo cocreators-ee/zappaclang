@@ -135,7 +135,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 
 			// Replace original variable reference with an assignment
 			target := nodes[0].(VariableNode)
-			nodes[0] = newAssign(itm.pos, target.Name)
+			nodes[0] = newAssign(target.Position(), target.Name)
 		} else if itm.typ == itemVariable {
 			/*
 				$foo
