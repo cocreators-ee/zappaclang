@@ -164,21 +164,23 @@ const (
 //go:generate stringer -type=NumberSystem
 
 func parseNumberSystem(number string) NumberSystem {
-	if number[0] == 'b' || number[0] == 'B' {
-		return Bin
-	}
-	if number[0] == '0' {
-		if len(number) == 1 {
-			// Literal "0"
-			return Dec
+	if len(number) > 0 {
+		if number[0] == 'b' || number[0] == 'B' {
+			return Bin
 		}
-		if number[1] == 'x' || number[1] == 'X' {
-			return Hex
+		if number[0] == '0' {
+			if len(number) == 1 {
+				// Literal "0"
+				return Dec
+			}
+			if number[1] == 'x' || number[1] == 'X' {
+				return Hex
+			}
+			if number[1] == '.' {
+				return Dec
+			}
+			return Oct
 		}
-		if number[1] == '.' {
-			return Dec
-		}
-		return Oct
 	}
 	return Dec
 }

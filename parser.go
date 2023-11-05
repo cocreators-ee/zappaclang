@@ -234,6 +234,11 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 				p.pos++ // Skip peeked item, it's been parsed
 			} else {
 				// Is an operator valid here - typically needs a value on the left (and right, but that will be checked later), or rparen
+				if p.pos == 1 {
+					err = fmt.Errorf("unexpected %s at pos %d", itm.val, itm.pos)
+					return
+				}
+
 				left := nodes[len(nodes)-1]
 				validLeftTypes := append(ValueNodes, NodeRParen)
 
@@ -404,11 +409,11 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 
 			nodes = append(nodes, newAbs(itm.pos))
 		} else if itm.typ == itemText {
-			err = fmt.Errorf("unexpected %s at position %d", itm.val, itm.pos)
+			err = fmt.Errorf("unexpected %s at pos %d", itm.val, itm.pos)
 			nodes = append(nodes, newEOF(Pos(len(p.input))))
 			return
 		} else {
-			err = fmt.Errorf("unexpected %s at position %d", itm.val, itm.pos)
+			err = fmt.Errorf("unexpected %s at pos %d", itm.val, itm.pos)
 			nodes = append(nodes, newEOF(Pos(len(p.input))))
 			return
 		}

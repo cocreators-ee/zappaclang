@@ -73,10 +73,10 @@ var execTests = []execTestCase{
 	{"oct(8)", "010"},
 
 	// Errors shouldn't crash but give a decent message
-	{"error", "unexpected error at position 0"},
+	{"error", "unexpected error at pos 0"},
 	{"abs()", "unexpected ) at pos 4, should be following numbers, variables, or other )s"},
 	{"$fo", "unknown variable $fo"},
-	{"+", "unexpected + at position 0"},
+	{"+", "unexpected + at pos 0"},
 
 	// Non-errors
 	{"", ""},
@@ -103,7 +103,7 @@ func TestExec(t *testing.T) {
 	// Filter for debugging
 	//runTests = []execTestCase{}
 	//for _, execTest := range execTests {
-	//	if execTest.Input == "1 * 0" {
+	//	if execTest.Input == "+" {
 	//		runTests = append(runTests, execTest)
 	//	}
 	//}
@@ -127,7 +127,7 @@ func TestExec(t *testing.T) {
 					t.Log(execTest.Input, fmt.Sprintf("OK in %s", elapsed))
 					return
 				}
-				t.Errorf("%s (%s): got\n\t%+v", execTest.Input, elapsed, err)
+				t.Errorf("%s (%s): got\n\t%+v\nexpected\n\t%v", execTest.Input, elapsed, err, execTest.Expected)
 				return
 			}
 
