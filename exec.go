@@ -331,9 +331,9 @@ func (zs *ZappacState) Exec(nodes []Node, updateVariables bool) (string, error) 
 	result, err := zs.pemdas(nodes)
 	if err == nil {
 		detectedSystem := parseNumberSystem(result)
-		fmt.Printf(".. %s vs %s\n", outputSystem, detectedSystem)
+		// fmt.Printf(".. %s vs %s\n", outputSystem, detectedSystem)
 		if outputSystem != detectedSystem {
-			fmt.Printf(".. converting %s (%s -> %s)\n", result, detectedSystem, outputSystem)
+			// fmt.Printf(".. converting %s (%s -> %s)\n", result, detectedSystem, outputSystem)
 			num := newNumber(-1, result, detectedSystem)
 			f64, err := num.toFloat64()
 			if err != nil {
