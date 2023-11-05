@@ -11,7 +11,7 @@ type parser struct {
 	input        string
 	parenthesis  int
 	pos          Pos
-	lastLexerPos Pos
+	lastLexerEnd Pos
 }
 
 var (
@@ -34,9 +34,9 @@ func (p *parser) parse() (nodes []Node, err error) {
 	}
 
 	if err != nil {
-		nodes = append(nodes, newParsingStopped(p.lastLexerPos))
+		nodes = append(nodes, newParsingStopped(p.lastLexerEnd))
 	} else if lastType != NodeEOF {
-		nodes = append(nodes, newParsingStopped(p.lastLexerPos))
+		nodes = append(nodes, newParsingStopped(p.lastLexerEnd))
 	}
 
 	return
@@ -117,7 +117,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 		itm, err = p.nextItem(items)
 
 		if itm != nil {
-			p.lastLexerPos = itm.pos
+			p.lastLexerEnd = itm.end
 		}
 
 		if err != nil {

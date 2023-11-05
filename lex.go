@@ -146,6 +146,7 @@ const (
 type item struct {
 	typ ItemType // The type of this item.
 	pos Pos      // The starting position, in bytes, of this item in the input string.
+	end Pos      // The ending position
 	val string   // The value of this item.
 }
 
@@ -212,7 +213,7 @@ func (l *lexer) backup() {
 // thisItem returns the item at the current input point with the specified type
 // and advances the input.
 func (l *lexer) thisItem(t ItemType) item {
-	i := item{t, l.start, l.input[l.start:l.pos]}
+	i := item{t, l.start, l.pos, l.input[l.start:l.pos]}
 	l.start = l.pos
 	return i
 }
@@ -257,7 +258,7 @@ func (l *lexer) acceptRun(valid string) {
 // errorf returns an error token and terminates the scan by passing
 // back a nil pointer that will be the next state, terminating l.nextItem.
 func (l *lexer) errorf(format string, args ...any) stateFn {
-	item := item{itemError, l.start, fmt.Sprintf(format, args...)}
+	item := item{itemError, l.start, l.start, fmt.Sprintf(format, args...)}
 	l.emitItem(item)
 	l.start = 0
 	l.pos = 0
@@ -323,7 +324,7 @@ func lexBase(l *lexer) stateFn {
 	l.acceptRun(whitespaceChars)
 	if l.pos > l.start {
 		l.ignore()
-		l.emitItem(item{itemSpace, l.start, " "})
+		l.emitItem(item{itemSpace, l.start, l.pos, " "})
 	}
 
 	for _, lexMapItem := range lexMap {
