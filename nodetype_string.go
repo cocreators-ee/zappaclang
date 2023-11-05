@@ -9,34 +9,35 @@ func _() {
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
 	_ = x[NodeEOF-0]
-	_ = x[NodeAssign-1]
-	_ = x[NodeLParen-2]
-	_ = x[NodeRParen-3]
-	_ = x[NodeNumber-4]
-	_ = x[NodeVariable-5]
-	_ = x[NodeAdd-6]
-	_ = x[NodeSub-7]
-	_ = x[NodeMult-8]
-	_ = x[NodeExp-9]
-	_ = x[NodeDiv-10]
-	_ = x[NodeFdiv-11]
-	_ = x[NodeAnd-12]
-	_ = x[NodeOr-13]
-	_ = x[NodeXor-14]
-	_ = x[NodeInv-15]
-	_ = x[NodeMod-16]
-	_ = x[NodeLShift-17]
-	_ = x[NodeRShift-18]
-	_ = x[NodeAbs-19]
-	_ = x[NodeSetOutput-20]
-	_ = x[NodeSave-21]
-	_ = x[NodeLoad-22]
-	_ = x[NodeClear-23]
+	_ = x[NodeParsingStopped-1]
+	_ = x[NodeAssign-2]
+	_ = x[NodeLParen-3]
+	_ = x[NodeRParen-4]
+	_ = x[NodeNumber-5]
+	_ = x[NodeVariable-6]
+	_ = x[NodeAdd-7]
+	_ = x[NodeSub-8]
+	_ = x[NodeMult-9]
+	_ = x[NodeExp-10]
+	_ = x[NodeDiv-11]
+	_ = x[NodeFdiv-12]
+	_ = x[NodeAnd-13]
+	_ = x[NodeOr-14]
+	_ = x[NodeXor-15]
+	_ = x[NodeInv-16]
+	_ = x[NodeMod-17]
+	_ = x[NodeLShift-18]
+	_ = x[NodeRShift-19]
+	_ = x[NodeAbs-20]
+	_ = x[NodeSetOutput-21]
+	_ = x[NodeSave-22]
+	_ = x[NodeLoad-23]
+	_ = x[NodeClear-24]
 }
 
-const _NodeType_name = "NodeEOFNodeAssignNodeLParenNodeRParenNodeNumberNodeVariableNodeAddNodeSubNodeMultNodeExpNodeDivNodeFdivNodeAndNodeOrNodeXorNodeInvNodeModNodeLShiftNodeRShiftNodeAbsNodeSetOutputNodeSaveNodeLoadNodeClear"
+const _NodeType_name = "NodeEOFNodeParsingStoppedNodeAssignNodeLParenNodeRParenNodeNumberNodeVariableNodeAddNodeSubNodeMultNodeExpNodeDivNodeFdivNodeAndNodeOrNodeXorNodeInvNodeModNodeLShiftNodeRShiftNodeAbsNodeSetOutputNodeSaveNodeLoadNodeClear"
 
-var _NodeType_index = [...]uint8{0, 7, 17, 27, 37, 47, 59, 66, 73, 81, 88, 95, 103, 110, 116, 123, 130, 137, 147, 157, 164, 177, 185, 193, 202}
+var _NodeType_index = [...]uint8{0, 7, 25, 35, 45, 55, 65, 77, 84, 91, 99, 106, 113, 121, 128, 134, 141, 148, 155, 165, 175, 182, 195, 203, 211, 220}
 
 func (i NodeType) String() string {
 	if i < 0 || i >= NodeType(len(_NodeType_index)-1) {

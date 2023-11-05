@@ -30,6 +30,8 @@ func (p Pos) Position() Pos {
 const (
 	// NodeEOF is the end of input
 	NodeEOF NodeType = iota
+	// NodeParsingStopped is when parsing stops due to error
+	NodeParsingStopped
 	// NodeAssign is for $foo =
 	NodeAssign
 	// NodeLParen is for (
@@ -380,6 +382,23 @@ func (e EOFNode) String() string {
 func newEOF(pos Pos) EOFNode {
 	return EOFNode{
 		NodeType: NodeEOF,
+		Pos:      pos,
+	}
+}
+
+// ParsingStoppedNode is where parsing stops
+type ParsingStoppedNode struct {
+	NodeType
+	Pos
+}
+
+func (ps ParsingStoppedNode) String() string {
+	return "ERROR"
+}
+
+func newParsingStopped(pos Pos) ParsingStoppedNode {
+	return ParsingStoppedNode{
+		NodeType: NodeParsingStopped,
 		Pos:      pos,
 	}
 }

@@ -6,11 +6,12 @@ import (
 )
 
 type parser struct {
-	lexer       *lexer
-	items       []item
-	input       string
-	parenthesis int
-	pos         Pos
+	lexer        *lexer
+	items        []item
+	input        string
+	parenthesis  int
+	pos          Pos
+	lastLexerPos Pos
 }
 
 var (
@@ -26,7 +27,18 @@ func (p *parser) parse() (nodes []Node, err error) {
 	p.parenthesis = 0
 
 	nodes, err = p.readTokens(items)
-	// TODO: Append item pos to err
+
+	lastType := NodeType(-1)
+	if len(nodes) > 0 {
+		lastType = nodes[len(nodes)-1].Type()
+	}
+
+	if err != nil {
+		nodes = append(nodes, newParsingStopped(p.lastLexerPos))
+	} else if lastType != NodeEOF {
+		nodes = append(nodes, newParsingStopped(p.lastLexerPos))
+	}
+
 	return
 }
 
@@ -103,6 +115,10 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 		// Read new item
 		var itm *item
 		itm, err = p.nextItem(items)
+
+		if itm != nil {
+			p.lastLexerPos = itm.pos
+		}
 
 		if err != nil {
 			return
