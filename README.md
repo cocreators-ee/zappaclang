@@ -3,6 +3,8 @@
 Zappac is a calculator. Zappac Lang is the processing utilities for the language used by Zappac's
 various forms.
 
+TODO: Migrate math to https://github.com/ericlagergren/decimal
+
 ## Testing
 
 Install [gow](https://github.com/mitranim/gow)

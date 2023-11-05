@@ -89,7 +89,7 @@ func parsedEqual(i1 []Node, i2 []simpleNode, checkPos bool) bool {
 
 func TestParse(t *testing.T) {
 	for _, test := range parserTests {
-		fmt.Printf("Parsing: %#v\n", test.input)
+		// fmt.Printf("Parsing: %#v\n", test.input)
 
 		start := time.Now()
 		nodes, err := Parse(test.input)

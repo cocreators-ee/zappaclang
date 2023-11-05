@@ -180,30 +180,38 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			isNegativeNumber := false
 			var peek *item = nil
 			if itm.typ == itemSub {
-				left := nodes[len(nodes)-1]
-				// Check for 2 - 1 or $foo - 1
-				if !IsNodeType(left, ValueNodes) {
+				if p.pos == 1 {
 					peek, err = p.peek(items)
 					if err != nil {
 						return
 					}
+					isNegativeNumber = true
+				} else {
+					left := nodes[len(nodes)-1]
+					// Check for 2 - 1 or $foo - 1
+					if !IsNodeType(left, ValueNodes) {
+						peek, err = p.peek(items)
+						if err != nil {
+							return
+						}
 
-					// Is the next item a number?
-					if peek != nil && peek.typ == itemNumber {
-						if p.pos == 1 {
-							isNegativeNumber = true
-						} else {
-							// Check for various cases for negative number parsing
-							/*
-								2 + -1  // Operators
-								abs(-1) // LParen
-								2 + (-1 * 3)
-								$foo = -1 // Prefixes
-								dec(-7)
-							*/
-							validLeftTypes := append(OperatorNodes, prefixNodes...)
-							if IsNodeType(left, validLeftTypes) {
+						// Is the next item a number?
+						if peek != nil && peek.typ == itemNumber {
+							if p.pos == 1 {
 								isNegativeNumber = true
+							} else {
+								// Check for various cases for negative number parsing
+								/*
+									2 + -1  // Operators
+									abs(-1) // LParen
+									2 + (-1 * 3)
+									$foo = -1 // Prefixes
+									dec(-7)
+								*/
+								validLeftTypes := append(OperatorNodes, prefixNodes...)
+								if IsNodeType(left, validLeftTypes) {
+									isNegativeNumber = true
+								}
 							}
 						}
 					}

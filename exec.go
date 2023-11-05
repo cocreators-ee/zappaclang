@@ -2,6 +2,7 @@ package zappaclang
 
 import (
 	"fmt"
+	"log"
 	"math"
 	"os"
 	"path"
@@ -286,7 +287,14 @@ func (zs *ZappacState) Exec(nodes []Node, updateVariables bool) (string, error) 
 
 	firstType := nodes[0].Type()
 	targetVariable := ""
-	outputSystem := Dec // TODO: Autodetect
+
+	// Fallback to decimal output, default to type of first number
+	outputSystem := Dec
+	firstNumber := findNext(nodes, []NodeType{NodeNumber})
+	if firstNumber != -1 {
+		num := nodes[firstNumber].(NumberNode)
+		outputSystem = num.System
+	}
 
 	if firstType == NodeSetOutput {
 		setOutput, _ := nodes[0].(SetOutputNode)
@@ -322,9 +330,25 @@ func (zs *ZappacState) Exec(nodes []Node, updateVariables bool) (string, error) 
 
 	result, err := zs.pemdas(nodes)
 	if err == nil {
-		if outputSystem != Dec {
-			// TODO: Convert
-			_ = outputSystem
+		detectedSystem := parseNumberSystem(result)
+		fmt.Printf(".. %s vs %s\n", outputSystem, detectedSystem)
+		if outputSystem != detectedSystem {
+			fmt.Printf(".. converting %s (%s -> %s)\n", result, detectedSystem, outputSystem)
+			num := newNumber(-1, result, detectedSystem)
+			f64, err := num.toFloat64()
+			if err != nil {
+				log.Panicf("Got %v trying to parse %s", err, result)
+			}
+
+			if outputSystem == Hex {
+				result = "0x" + strconv.FormatInt(int64(f64), 16)
+			} else if outputSystem == Oct {
+				result = "0" + strconv.FormatInt(int64(f64), 8)
+			} else if outputSystem == Bin {
+				result = "b" + strconv.FormatInt(int64(f64), 2)
+			} else {
+				result = fmt.Sprintf("%v", f64)
+			}
 		}
 
 		if targetVariable != "" {

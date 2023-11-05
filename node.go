@@ -118,6 +118,13 @@ var diskOperationMap = map[string]NodeType{
 	"load": NodeLoad,
 }
 
+var numberSystemMap = map[string]NumberSystem{
+	"dec": Dec,
+	"bin": Bin,
+	"hex": Hex,
+	"oct": Oct,
+}
+
 // FunctionNodes are any functions
 var FunctionNodes = []NodeType{
 	NodeAbs,
@@ -167,6 +174,9 @@ func parseNumberSystem(number string) NumberSystem {
 		}
 		if number[1] == 'x' || number[1] == 'X' {
 			return Hex
+		}
+		if number[1] == '.' {
+			return Dec
 		}
 		return Oct
 	}
@@ -226,7 +236,7 @@ func newSetOutput(pos Pos, output string) SetOutputNode {
 	return SetOutputNode{
 		NodeType: NodeSetOutput,
 		Pos:      pos,
-		Output:   parseNumberSystem(output),
+		Output:   numberSystemMap[output],
 	}
 }
 
