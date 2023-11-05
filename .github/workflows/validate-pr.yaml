@@ -35,17 +35,10 @@ jobs:
 
       - name: Install tools
         run: |
-          mkdir -p frontend/dist
-          touch frontend/dist/blah.txt
-
           pip install pre-commit
           go install github.com/lietu/go-pre-commit@latest
           go install github.com/kisielk/errcheck@latest
           go install honnef.co/go/tools/cmd/staticcheck@latest
-
-          cd frontend
-          pnpm install
-          pnpm add -g eslint
 
       # Run pre-commit --all-files
       - uses: pre-commit/action@646c83fcd040023954eafda54b4db0192ce70507 # v3.0.0
