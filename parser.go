@@ -178,6 +178,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 			*/
 			// Special handling of - for negative numbers
 			isNegativeNumber := false
+
 			var peek *item = nil
 			if itm.typ == itemSub {
 				if p.pos == 1 {
@@ -218,7 +219,7 @@ func (p *parser) readTokens(items chan item) (nodes []Node, err error) {
 				}
 			}
 
-			if isNegativeNumber {
+			if peek != nil && isNegativeNumber {
 				// This is a negative number, do number validation
 				value := fmt.Sprintf("-%s", peek.val)
 				if p.pos != 1 {

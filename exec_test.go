@@ -22,6 +22,7 @@ var execTests = []execTestCase{
 	{"load(foobar)", "Loaded foobar"},
 
 	// Testing that it doesn't mangle things
+	{"-1", "-1"},
 	{"0xff", "0xff"},
 	{"0755", "0755"},
 	{"0.1243871635897613587671", "0.1243871635897613587671"},
@@ -77,6 +78,7 @@ var execTests = []execTestCase{
 	{"abs()", "unexpected ) at pos 4, should be following numbers, variables, or other )s"},
 	{"$fo", "unknown variable $fo"},
 	{"+", "unexpected + at pos 0"},
+	{"-", "unexpected - at pos 0"},
 
 	// Non-errors
 	{"", ""},
@@ -111,6 +113,8 @@ func TestExec(t *testing.T) {
 	zs := NewZappacState("")
 	for _, execTest := range runTests {
 		func() {
+			// Comment out to find full trace of panics
+
 			defer func() {
 				if err := recover(); err != nil {
 					t.Errorf("%s (?): got\n\t%s\nexpected\n\t%s", execTest.Input, err, execTest.Expected)
